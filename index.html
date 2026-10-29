@@ -1,0 +1,1488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CSCA Physics Mock Exam - Work, Energy &amp; Power</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<!-- MathJax for rendering Mathematical LaTeX expressions -->
+<script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']]
+    },
+    svg: { fontCache: 'global' }
+  };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  /* ============ CSCA BRAND DESIGN TOKENS (GREEN ACCENT) ============ */
+  :root {
+    --ink: #0F172A;
+    --ink-soft: #475569;
+    --canvas: #F8FAFC;
+    --card: #FFFFFF;
+    --line: #E2E8F0;
+
+    /* Brand Green Accent */
+    --primary: #059669;
+    --primary-dark: #047857;
+    --primary-light: #10B981;
+    --primary-tint: #ECFDF5;
+    --primary-glow: rgba(16, 185, 129, 0.25);
+
+    /* Brand Orange Dot Accent for csca.ai */
+    --brand-orange: #F97316;
+
+    --mint: #10B981;
+    --mint-tint: #D1FAE5;
+    --amber: #F59E0B;
+    --amber-tint: #FEF3C7;
+    --crimson: #EF4444;
+    --crimson-tint: #FEE2E2;
+
+    --radius-lg: 20px;
+    --radius-md: 14px;
+    --radius-sm: 10px;
+    --shadow-card: 0 10px 30px rgba(15, 23, 42, 0.08);
+    --shadow-soft: 0 4px 14px rgba(15, 23, 42, 0.05);
+
+    --font-display: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; padding: 0; }
+  body {
+    background: var(--canvas);
+    color: var(--ink);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  button, input { font-family: inherit; }
+  button { appearance: none; border: none; cursor: pointer; background: none; color: inherit; }
+
+  .screen { display: none; min-height: 100vh; position: relative; }
+  .screen.is-active { display: flex; flex-direction: column; }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes shake {
+    10%, 90% { transform: translateX(-1px); }
+    20%, 80% { transform: translateX(2px); }
+    30%, 50%, 70% { transform: translateX(-4px); }
+    40%, 60% { transform: translateX(4px); }
+  }
+  @keyframes pulseBar {
+    0%, 100% { opacity: 1; }
+    50% { opacity: .55; }
+  }
+
+  /* ============ BULLETPROOF INLINE SVG LOGO ============ */
+  .brand-logo {
+    display: inline-flex;
+    align-items: center;
+    line-height: 1;
+    color: var(--ink);
+    user-select: none;
+    vertical-align: middle;
+  }
+  .brand-logo-white {
+    color: #FFFFFF !important;
+  }
+  .csca-logo-svg {
+    display: block;
+    height: 28px;
+    width: auto;
+    overflow: visible;
+  }
+
+  /* ============ ENTRY SCREEN & INTERACTIVE CANVAS ============ */
+  #screen-entry {
+    position: relative;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 16px;
+    min-height: 100vh;
+    overflow: hidden;
+    background: radial-gradient(circle at 50% 40%, #064E3B 0%, #022C22 60%, #011C15 100%);
+  }
+
+  #entry-bg-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: auto;
+  }
+
+  .entry-card {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 470px;
+    background: rgba(255, 255, 255, 0.97);
+    backdrop-filter: blur(18px);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
+    padding: 40px 36px 32px;
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    animation: fadeInUp .6s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .entry-brand-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+
+  .exam-badge {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    background: var(--primary-tint);
+    color: var(--primary-dark);
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid #A7F3D0;
+  }
+
+  .entry-card h1 {
+    font-family: var(--font-display);
+    font-size: 24px;
+    font-weight: 800;
+    line-height: 1.25;
+    margin: 0 0 6px;
+    color: var(--ink);
+  }
+
+  .entry-sub {
+    color: var(--ink-soft);
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0 0 24px;
+  }
+
+  .field { margin-bottom: 18px; }
+  .field label {
+    display: block;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 6px;
+  }
+  .field input {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: var(--radius-sm);
+    border: 1.5px solid var(--line);
+    font-size: 15px;
+    color: var(--ink);
+    background: #f8fafc;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  .field input::placeholder { color: #94A3B8; }
+  .field input:focus-visible {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px var(--primary-tint);
+    background: #fff;
+  }
+  .field input.shake { animation: shake .4s ease; border-color: var(--crimson); }
+
+  .btn {
+    font-weight: 600;
+    font-size: 15px;
+    border-radius: var(--radius-sm);
+    padding: 13px 20px;
+    transition: transform .12s ease, box-shadow .12s ease, background .15s, border-color .15s, color .15s;
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .btn:active { transform: translateY(1px); }
+  .btn:focus-visible { outline: 3px solid var(--primary-tint); outline-offset: 2px; }
+  .btn:disabled { opacity: .45; cursor: not-allowed; }
+  .btn-block { width: 100%; }
+  .btn-primary { 
+    background: var(--primary); 
+    color: #fff; 
+    box-shadow: 0 8px 20px var(--primary-glow); 
+  }
+  .btn-primary:hover:not(:disabled) { background: var(--primary-dark); }
+  .btn-ghost { background: transparent; color: var(--ink-soft); border: 1.5px solid var(--line); }
+  .btn-ghost:hover:not(:disabled) { border-color: var(--primary); color: var(--primary-dark); background: var(--primary-tint); }
+
+  .entry-meta {
+    margin-top: 22px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    border-top: 1px solid var(--line);
+    padding-top: 16px;
+  }
+  .entry-meta span {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    background: #F1F5F9;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 5px 12px;
+    color: var(--ink-soft);
+  }
+
+  /* ============ EXAM SCREEN ============ */
+  .timer-track { height: 6px; width: 100%; background: var(--line); flex-shrink: 0; }
+  .timer-fill {
+    height: 100%; width: 100%;
+    background: linear-gradient(90deg, #34D399, var(--primary));
+    transition: width 1s linear, background .4s ease;
+  }
+  .timer-track.critical .timer-fill {
+    background: linear-gradient(90deg, #ff6a5f, var(--crimson));
+    animation: pulseBar 1s ease-in-out infinite;
+  }
+
+  .exam-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 28px;
+    background: #064E3B;
+    color: #fff;
+    flex-shrink: 0;
+    box-shadow: 0 4px 14px rgba(6, 78, 59, 0.25);
+  }
+  .exam-header-left {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+  .exam-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: .01em;
+  }
+  .exam-title small {
+    display: block;
+    font-family: var(--font-body);
+    font-weight: 400;
+    letter-spacing: 0;
+    opacity: .85;
+    font-size: 12px;
+    margin-top: 2px;
+  }
+  .timer-display {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 17px;
+    background: rgba(255, 255, 255, 0.16);
+    padding: 6px 16px;
+    border-radius: 999px;
+    letter-spacing: .03em;
+    transition: background .2s ease;
+  }
+  .timer-display.critical { background: rgba(239, 68, 68, 0.95); }
+
+  .exam-body {
+    flex: 1;
+    display: flex;
+    gap: 24px;
+    padding: 24px 28px 40px;
+    align-items: flex-start;
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  .sidebar {
+    width: 270px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    position: sticky;
+    top: 24px;
+  }
+  .student-card {
+    display: flex; align-items: center; gap: 12px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: 14px;
+    box-shadow: var(--shadow-soft);
+  }
+  .avatar {
+    width: 42px; height: 42px; border-radius: 50%; flex-shrink: 0;
+    background: var(--primary-tint); color: var(--primary-dark);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-family: var(--font-display);
+    border: 1.5px solid #A7F3D0;
+  }
+  .student-name { font-weight: 700; font-size: 14px; line-height: 1.3; color: var(--ink); }
+  .student-sub { font-size: 12px; color: var(--ink-soft); margin-top: 2px; }
+
+  /* Legend Indicators (Unique class name prevents conflicts) */
+  .legend { display: flex; gap: 10px; flex-wrap: wrap; font-size: 11px; color: var(--ink-soft); padding: 0 2px; }
+  .legend span { display: flex; align-items: center; gap: 5px; }
+  .indicator-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+  .indicator-dot.unanswered { background: #CBD5E1; }
+  .indicator-dot.answered { background: var(--primary); }
+  .indicator-dot.marked { background: var(--brand-orange); }
+
+  .grid-card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: 16px;
+    box-shadow: var(--shadow-soft);
+  }
+  .grid-card-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px; }
+  .grid-card-header .label { font-weight: 700; font-size: 13px; }
+  .grid-card-header .count { font-family: var(--font-mono); font-size: 12px; color: var(--primary-dark); font-weight: 700; }
+
+  .q-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+  .q-cell {
+    aspect-ratio: 1/1;
+    border-radius: 8px;
+    border: 1.5px solid var(--line);
+    background: #fbfcff;
+    color: var(--ink-soft);
+    font-family: var(--font-mono);
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all .15s ease;
+    position: relative;
+  }
+  .q-cell:hover { border-color: var(--primary); color: var(--primary-dark); }
+  .q-cell.answered { background: var(--primary); border-color: var(--primary); color: #fff; }
+  .q-cell.marked::after {
+    content: ''; position: absolute; top: -3px; right: -3px;
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--brand-orange); border: 2px solid var(--card);
+  }
+  .q-cell.current {
+    box-shadow: 0 0 0 3px var(--primary-tint);
+    border-color: var(--primary);
+    font-weight: 700;
+  }
+
+  /* Question Panel */
+  .question-panel { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 16px; }
+  .question-nav { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .question-counter {
+    font-family: var(--font-mono); font-weight: 600; font-size: 13px;
+    color: var(--primary-dark); background: var(--primary-tint);
+    border: 1px solid #A7F3D0; padding: 8px 16px; border-radius: 999px;
+  }
+
+  .question-card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    box-shadow: var(--shadow-card);
+  }
+  .question-topic-tag {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 11px; font-weight: 700; letter-spacing: .05em;
+    text-transform: uppercase;
+    color: var(--primary-dark); background: var(--primary-tint);
+    border: 1px solid #A7F3D0;
+    padding: 4px 10px; border-radius: 6px; margin-bottom: 16px;
+  }
+  .question-text {
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 1.55;
+    margin-bottom: 24px;
+    color: var(--ink);
+  }
+
+  .options-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 28px; }
+  .option-item {
+    display: flex; align-items: center; gap: 14px;
+    padding: 14px 18px;
+    border-radius: var(--radius-md);
+    border: 1.5px solid var(--line);
+    background: #fbfcfe;
+    cursor: pointer;
+    transition: all .15s ease;
+    font-size: 15px;
+  }
+  .option-item:hover { border-color: var(--primary); background: #F0FDF4; }
+  .option-item.selected {
+    border-color: var(--primary);
+    background: var(--primary-tint);
+    color: var(--primary-dark);
+    font-weight: 600;
+  }
+  .option-radio {
+    width: 20px; height: 20px; border-radius: 50%;
+    border: 2px solid var(--line);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; background: #fff;
+    transition: all .15s ease;
+  }
+  .option-item.selected .option-radio {
+    border-color: var(--primary);
+    background: var(--primary);
+  }
+  .option-radio::after {
+    content: ''; width: 8px; height: 8px; border-radius: 50%; background: #fff;
+    opacity: 0; transform: scale(0); transition: all .15s ease;
+  }
+  .option-item.selected .option-radio::after { opacity: 1; transform: scale(1); }
+
+  .question-actions {
+    display: flex; align-items: center; justify-content: space-between;
+    padding-top: 20px; border-top: 1px solid var(--line);
+  }
+
+  /* ============ OUTRO / RESULT SCREEN ============ */
+  #screen-outro {
+    align-items: center;
+    padding: 40px 20px 60px;
+    max-width: 900px;
+    margin: 0 auto;
+    width: 100%;
+  }
+  .outro-card {
+    width: 100%;
+    background: var(--card);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow-card);
+    padding: 36px;
+    margin-bottom: 24px;
+  }
+  .score-header { text-align: center; margin-bottom: 28px; }
+  .score-header h2 { font-family: var(--font-display); font-size: 26px; font-weight: 800; margin: 10px 0 8px; }
+  .score-badge {
+    display: inline-block;
+    padding: 6px 18px; border-radius: 999px; font-weight: 700; font-size: 14px;
+    font-family: var(--font-mono); margin-bottom: 8px;
+  }
+  .score-badge.passed { background: var(--primary-tint); color: var(--primary-dark); border: 1px solid #A7F3D0; }
+  .score-badge.failed { background: var(--crimson-tint); color: var(--crimson); border: 1px solid #FECACA; }
+
+  .score-stats {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
+    margin-bottom: 32px; text-align: center;
+  }
+  .stat-box {
+    background: #f8fafc; border: 1px solid var(--line);
+    padding: 16px 12px; border-radius: var(--radius-md);
+  }
+  .stat-val { font-family: var(--font-mono); font-size: 24px; font-weight: 700; color: var(--ink); }
+  .stat-lbl { font-size: 12px; color: var(--ink-soft); margin-top: 4px; }
+
+  .review-title { font-family: var(--font-display); font-size: 18px; font-weight: 700; margin: 0 0 16px; }
+  .review-list { display: flex; flex-direction: column; gap: 16px; }
+  .review-item {
+    background: #fbfcfe; border: 1px solid var(--line);
+    border-radius: var(--radius-md); padding: 20px;
+  }
+  .review-item.is-correct { border-left: 5px solid var(--primary); }
+  .review-item.is-incorrect { border-left: 5px solid var(--crimson); }
+  .review-item.is-skipped { border-left: 5px solid var(--brand-orange); }
+
+  .review-q-num { font-family: var(--font-mono); font-size: 12px; font-weight: 700; color: var(--primary-dark); margin-bottom: 6px; }
+  .review-q-text { font-weight: 600; font-size: 15px; margin-bottom: 12px; }
+  .review-ans { font-size: 14px; line-height: 1.6; margin-bottom: 8px; }
+  .review-ans span { font-weight: 600; }
+  .review-ans.user-ans { color: var(--ink-soft); }
+  .review-ans.correct-ans { color: var(--primary-dark); }
+  .review-exp {
+    margin-top: 10px; padding: 12px 14px; border-radius: 6px;
+    font-size: 13.5px; color: #334155; line-height: 1.5;
+    background: #f4f6fb; border: 1px dashed var(--line);
+  }
+
+  @media (max-width: 820px) {
+    .exam-body { flex-direction: column; padding: 16px; }
+    .sidebar { width: 100%; position: static; }
+    .score-stats { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+  <!-- ============ ENTRY SCREEN ============ -->
+  <div id="screen-entry" class="screen is-active">
+    <canvas id="entry-bg-canvas"></canvas>
+    
+    <div class="entry-card">
+      <div class="entry-brand-header">
+        <div class="brand-logo" aria-label="csca.ai">
+          <svg class="csca-logo-svg" viewBox="0 0 108 30" height="28" xmlns="http://www.w3.org/2000/svg">
+            <text x="0" y="23" font-family="'Plus Jakarta Sans', system-ui, -apple-system, sans-serif" font-weight="800" font-size="26" fill="currentColor" letter-spacing="-0.03em">csca<tspan fill="#F97316">.</tspan>ai</text>
+          </svg>
+        </div>
+        <span class="exam-badge">Work, Energy &amp; Power</span>
+      </div>
+
+      <h1>Physics Assessment</h1>
+      <p class="entry-sub">Topic Assessment: <strong>Physics — Work, Energy &amp; Power</strong></p>
+      
+      <form id="entry-form" onsubmit="handleStartExam(event)">
+        <div class="field">
+          <label for="student-name-input">Candidate Name</label>
+          <input type="text" id="student-name-input" placeholder="FirstName LastName" required autocomplete="name">
+        </div>
+        <div class="field">
+          <label for="student-id-input">Candidate Number <span style="font-weight:400; opacity:.7;">(Optional)</span></label>
+          <input type="text" id="student-id-input" placeholder="e.g. CSCA-PHYS-2026">
+        </div>
+        
+        <button type="submit" class="btn btn-primary btn-block">Begin Assessment &rarr;</button>
+      </form>
+
+      <div class="entry-meta">
+        <span>⏱ 45 Minutes</span>
+        <span>📝 25 Questions</span>
+        <span>🎯 Mechanics Module 5</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ EXAM SCREEN ============ -->
+  <div id="screen-exam" class="screen">
+    <div class="timer-track" id="timer-track">
+      <div class="timer-fill" id="timer-fill"></div>
+    </div>
+
+    <header class="exam-header">
+      <div class="exam-header-left">
+        <div class="brand-logo brand-logo-white" aria-label="csca.ai">
+          <svg class="csca-logo-svg" viewBox="0 0 108 30" height="28" xmlns="http://www.w3.org/2000/svg">
+            <text x="0" y="23" font-family="'Plus Jakarta Sans', system-ui, -apple-system, sans-serif" font-weight="800" font-size="26" fill="currentColor" letter-spacing="-0.03em">csca<tspan fill="#F97316">.</tspan>ai</text>
+          </svg>
+        </div>
+        <div style="border-left:1px solid rgba(255,255,255,0.25); padding-left:16px;">
+          <div class="exam-title">CSCA Physics Mock Exam</div>
+          <small style="opacity:0.85;">Topic: Work, Energy &amp; Power (Mechanics Module 5)</small>
+        </div>
+      </div>
+      <div class="timer-display" id="timer-display">45:00</div>
+    </header>
+
+    <main class="exam-body">
+      <!-- SIDEBAR -->
+      <aside class="sidebar">
+        <div class="student-card">
+          <div class="avatar" id="student-avatar">FL</div>
+          <div>
+            <div class="student-name" id="display-student-name">FirstName LastName</div>
+            <div class="student-sub" id="display-student-id">ID: N/A</div>
+          </div>
+        </div>
+
+        <div class="grid-card">
+          <div class="grid-card-header">
+            <span class="label">Questions</span>
+            <span class="count" id="progress-count">0 / 25 Answered</span>
+          </div>
+          <div class="q-grid" id="q-grid">
+            <!-- 25 Cells populated by JS -->
+          </div>
+        </div>
+
+        <div class="legend">
+          <span><i class="indicator-dot unanswered"></i> Unanswered</span>
+          <span><i class="indicator-dot answered"></i> Answered</span>
+          <span><i class="indicator-dot marked"></i> Marked</span>
+        </div>
+      </aside>
+
+      <!-- QUESTION PANEL -->
+      <section class="question-panel">
+        <div class="question-nav">
+          <div class="question-counter" id="question-counter">Question 1 of 25</div>
+          <button class="btn btn-ghost" id="btn-mark" onclick="toggleMarkQuestion()">🔖 Mark for Review</button>
+        </div>
+
+        <div class="question-card">
+          <span class="question-topic-tag">Physics — Work, Energy &amp; Power</span>
+          <div class="question-text" id="question-text">
+            Question text will load here...
+          </div>
+
+          <div class="options-list" id="options-list">
+            <!-- Options populated by JS -->
+          </div>
+
+          <div class="question-actions">
+            <button class="btn btn-ghost nav-btn" id="btn-prev" onclick="navigateQuestion(-1)">&larr; Previous</button>
+            <div style="display:flex; gap:10px;">
+              <button class="btn btn-ghost nav-btn" id="btn-next" onclick="navigateQuestion(1)">Next &rarr;</button>
+              <button class="btn btn-primary" onclick="confirmSubmitExam()">Finish &amp; Submit</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- ============ OUTRO SCREEN ============ -->
+  <div id="screen-outro" class="screen">
+    <div class="outro-card">
+      <div class="score-header">
+        <div class="brand-logo" style="margin-bottom:12px;" aria-label="csca.ai">
+          <svg class="csca-logo-svg" viewBox="0 0 108 30" height="28" xmlns="http://www.w3.org/2000/svg">
+            <text x="0" y="23" font-family="'Plus Jakarta Sans', system-ui, -apple-system, sans-serif" font-weight="800" font-size="26" fill="currentColor" letter-spacing="-0.03em">csca<tspan fill="#F97316">.</tspan>ai</text>
+          </svg>
+        </div>
+        <div class="score-badge" id="score-badge">PASSED</div>
+        <h2>Exam Performance Summary</h2>
+        <p style="color:var(--ink-soft); margin:0;">Candidate: <strong id="outro-student-name">FirstName LastName</strong></p>
+      </div>
+
+      <div class="score-stats">
+        <div class="stat-box">
+          <div class="stat-val" id="stat-score">0 / 25</div>
+          <div class="stat-lbl">Final Score</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val" id="stat-pct">0%</div>
+          <div class="stat-lbl">Percentage</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val" id="stat-correct">0</div>
+          <div class="stat-lbl">Correct Answers</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val" id="stat-time">0m 0s</div>
+          <div class="stat-lbl">Time Spent</div>
+        </div>
+      </div>
+
+      <div id="export-status" style="text-align:center; font-size:13px; color:var(--ink-soft); margin-bottom:14px;"></div>
+
+      <div style="text-align:center;">
+        <button class="btn btn-primary" onclick="restartExam()">Restart Assessment</button>
+      </div>
+    </div>
+
+    <div class="outro-card">
+      <h3 class="review-title">Detailed Solutions &amp; Analysis</h3>
+      <div class="review-list" id="review-list">
+        <!-- Review items generated by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ SCRIPTS ============ -->
+  <script>
+    /* ==========================================================================
+       1. QUESTION BANK: 25 Physics "Work, Energy & Power" Questions
+          Source: CSCA Masterclass Slides + CSCA April 2026, Jan 2026, Dec 2021 Papers
+       ========================================================================== */
+    const questions = [
+      {
+        id: 1,
+        question: "Which of the following physical quantities is a scalar? ( )",
+        options: [
+          "A. Displacement",
+          "B. Acceleration",
+          "C. Force",
+          "D. Work"
+        ],
+        correct: 3,
+        explanation: "Displacement, acceleration, and force are all vector quantities possessing both magnitude and direction. Work and energy are scalars ($W = Fs\\cos\\alpha$); they have signs ($+$/$-$) indicating energy transfer direction, but zero spatial direction. [CSCA April 2026 Q1]"
+      },
+      {
+        id: 2,
+        question: "A block moves a distance $x_0$ horizontally to the right across a floor under a constant pulling force $F$ directed at an angle $\\alpha$ above the horizontal. The work done by $F$ is ( )",
+        options: [
+          "A. $F x_0 \\cos\\alpha$",
+          "B. $\\dfrac{F x_0}{\\sin\\alpha}$",
+          "C. $F x_0 \\sin\\alpha$",
+          "D. $\\dfrac{F x_0}{\\cos\\alpha}$"
+        ],
+        correct: 0,
+        explanation: "By the definition of mechanical work, $W = F s \\cos\\theta$. Here displacement is $x_0$ and the angle between force $F$ and displacement is $\\alpha$, so $W = F x_0 \\cos\\alpha$. [CSCA Jan 2026 Q22]"
+      },
+      {
+        id: 3,
+        question: "In which of the following scenarios does the specified force do zero work ($W = 0$) on the object? ( )",
+        options: [
+          "A. Gravity acting on an apple in free fall",
+          "B. Kinetic friction acting on a sliding wooden box slowing down",
+          "C. Gravity acting on an artificial satellite in a circular orbit around Earth",
+          "D. Tension in an elevator cable lifting passengers vertically upward"
+        ],
+        correct: 2,
+        explanation: "In uniform circular orbit, the gravitational force acts as a centripetal force directed toward Earth's center, which is strictly perpendicular ($\\alpha = 90^\\circ$) to the satellite's instantaneous displacement vector. Since $\\cos 90^\\circ = 0$, $W = Fs\\cos 90^\\circ = 0$. [CSCA Masterclass Slide 5]"
+      },
+      {
+        id: 4,
+        question: "A horizontal pulling force of $15\\text{ N}$ moves an object a distance of $3\\text{ m}$ across a rough surface. If the opposing frictional force is $5\\text{ N}$, the work done by the pulling force is ( )",
+        options: [
+          "A. $45\\text{ J}$",
+          "B. $60\\text{ J}$",
+          "C. $30\\text{ J}$",
+          "D. $15\\text{ J}$"
+        ],
+        correct: 0,
+        explanation: "The question specifically asks for the work done by the pulling force: $W_F = F \\cdot s = 15\\text{ N} \\times 3\\text{ m} = 45\\text{ J}$. (The work done by friction is $-15\\text{ J}$, and the net work is $30\\text{ J}$). [CSCA April 2026 Q19]"
+      },
+      {
+        id: 5,
+        question: "A horizontal pulling force $F = 20\\text{ N}$ is applied to an object of mass $10\\text{ kg}$, causing it to move $5\\text{ m}$ across a rough surface with friction force $f = 5\\text{ N}$. The work done by the pulling force $F$ is ( )",
+        options: [
+          "A. $100\\text{ J}$",
+          "B. $75\\text{ J}$",
+          "C. $-25\\text{ J}$",
+          "D. $25\\text{ J}$"
+        ],
+        correct: 0,
+        explanation: "The work done by pulling force $F$ is $W_F = F \\cdot s = 20\\text{ N} \\times 5\\text{ m} = 100\\text{ J}$. [CSCA 12.21 Q18]"
+      },
+      {
+        id: 6,
+        question: "An object of mass $4\\text{ kg}$ is pulled vertically upward at a constant speed of $2\\text{ m/s}$ over a height of $3\\text{ m}$. The total net work done on the object is ( )",
+        options: [
+          "A. $120\\text{ J}$",
+          "B. $8\\text{ J}$",
+          "C. $0\\text{ J}$",
+          "D. $-120\\text{ J}$"
+        ],
+        correct: 2,
+        explanation: "Because the object moves at constant speed, its acceleration $a = 0$, so the net force $F_{\\text{net}} = 0$. By the Work-Energy Theorem, $W_{\\text{net}} = \\Delta E_k = 0\\text{ J}$. (The upward tension does $+120\\text{ J}$ and gravity does $-120\\text{ J}$, summing to $0$). [CSCA Masterclass Slide 7]"
+      },
+      {
+        id: 7,
+        question: "A horizontal pulling force of $20\\text{ N}$ pulls a crate forward across a floor by a distance of $5\\text{ m}$. Meanwhile, a constant kinetic friction force of $8\\text{ N}$ opposes the motion. What is the total net work done on the crate? ( )",
+        options: [
+          "A. $100\\text{ J}$",
+          "B. $60\\text{ J}$",
+          "C. $40\\text{ J}$",
+          "D. $140\\text{ J}$"
+        ],
+        correct: 1,
+        explanation: "$W_{\\text{net}} = F_{\\text{net}} \\cdot s = (F - f) \\cdot s = (20\\text{ N} - 8\\text{ N}) \\times 5\\text{ m} = 12\\text{ N} \\times 5\\text{ m} = 60\\text{ J}$. Alternatively, $W_{\\text{net}} = W_F + W_f = 100\\text{ J} + (-40\\text{ J}) = 60\\text{ J}$. [CSCA Masterclass Slide 7]"
+      },
+      {
+        id: 8,
+        question: "An object is moved a distance of $10\\text{ m}$ across a floor by a horizontal force of $20\\text{ N}$. The frictional force acting on it is $5\\text{ N}$. The increase in its kinetic energy during this process is ( )",
+        options: [
+          "A. $50\\text{ J}$",
+          "B. $200\\text{ J}$",
+          "C. $100\\text{ J}$",
+          "D. $150\\text{ J}$"
+        ],
+        correct: 3,
+        explanation: "By the Work-Energy Theorem, the increase in kinetic energy $\\Delta E_k = W_{\\text{net}} = (F - f)s = (20\\text{ N} - 5\\text{ N}) \\times 10\\text{ m} = 150\\text{ J}$. [CSCA April 2026 Q42]"
+      },
+      {
+        id: 9,
+        question: "A small ball with mass $m = 3\\text{ kg}$ rests on a smooth horizontal surface. Under the action of an external force, its velocity increases from $v_1 = 2\\text{ m/s}$ to $v_2 = 6\\text{ m/s}$. The work done by the external force is ( )",
+        options: [
+          "A. $54\\text{ J}$",
+          "B. $60\\text{ J}$",
+          "C. $48\\text{ J}$",
+          "D. $6\\text{ J}$"
+        ],
+        correct: 2,
+        explanation: "By the Work-Energy Theorem: $W = \\Delta E_k = \\frac{1}{2}m v_2^2 - \\frac{1}{2}m v_1^2 = \\frac{1}{2}(3)(6^2 - 2^2) = 1.5 \\times (36 - 4) = 1.5 \\times 32 = 48\\text{ J}$. [CSCA 12.21 Q19]"
+      },
+      {
+        id: 10,
+        question: "A car of mass $1000\\text{ kg}$ traveling at $20\\text{ m/s}$ slams on its brakes and skids to a complete halt on a level road. If the friction force between tires and asphalt is a constant $5000\\text{ N}$, what is the skidding distance? ( )",
+        options: [
+          "A. $20\\text{ m}$",
+          "B. $40\\text{ m}$",
+          "C. $80\\text{ m}$",
+          "D. $50\\text{ m}$"
+        ],
+        correct: 1,
+        explanation: "By the Work-Energy Theorem: $W_f = \\Delta E_k \\implies -f \\cdot s = 0 - \\frac{1}{2}mv^2 \\implies f \\cdot s = \\frac{1}{2}mv^2$. Substituting: $5000 s = \\frac{1}{2}(1000)(20^2) = 200{,}000 \\implies s = \\frac{200{,}000}{5000} = 40\\text{ m}$. [CSCA Masterclass Slide 13]"
+      },
+      {
+        id: 11,
+        question: "If the magnitude of linear momentum $p$ of an object is doubled while its mass remains constant, its kinetic energy will: ( )",
+        options: [
+          "A. Remain unchanged",
+          "B. Double ($\\times 2$)",
+          "C. Increase by $\\sqrt{2}$",
+          "D. Quadruple ($\\times 4$)"
+        ],
+        correct: 3,
+        explanation: "Using the momentum-kinetic energy bridge equation $E_k = \\frac{p^2}{2m}$. Since $E_k \\propto p^2$, doubling the momentum ($p \\to 2p$) results in $E_k' = \\frac{(2p)^2}{2m} = 4 \\frac{p^2}{2m} = 4 E_k$ (quadruples). [CSCA Masterclass Slide 9]"
+      },
+      {
+        id: 12,
+        question: "Two objects A and B have masses $m_A = 1\\text{ kg}$ and $m_B = 4\\text{ kg}$. If they have the exact same linear momentum ($p_A = p_B$), what is the ratio of their kinetic energies $E_{kA} : E_{kB}$? ( )",
+        options: [
+          "A. $1 : 4$",
+          "B. $4 : 1$",
+          "C. $1 : 2$",
+          "D. $1 : 1$"
+        ],
+        correct: 1,
+        explanation: "From $E_k = \\frac{p^2}{2m}$, when momentum $p$ is constant, $E_k \\propto \\frac{1}{m}$. Therefore, $\\frac{E_{kA}}{E_{kB}} = \\frac{m_B}{m_A} = \\frac{4\\text{ kg}}{1\\text{ kg}} = \\frac{4}{1}$. The lighter object possesses 4 times the kinetic energy! [CSCA Masterclass Slide 9]"
+      },
+      {
+        id: 13,
+        question: "An object with a mass of $50\\text{ kg}$ moves horizontally to the right at a speed of $10\\text{ m/s}$. Its momentum and kinetic energy are, respectively: ( )",
+        options: [
+          "A. $500\\text{ kg}\\cdot\\text{m/s},\\; 2500\\text{ J}$",
+          "B. $2500\\text{ kg}\\cdot\\text{m/s},\\; 500\\text{ J}$",
+          "C. $500\\text{ kg}\\cdot\\text{m/s},\\; 5000\\text{ J}$",
+          "D. $5\\text{ kg}\\cdot\\text{m/s},\\; 500\\text{ J}$"
+        ],
+        correct: 0,
+        explanation: "$p = mv = 50\\text{ kg} \\times 10\\text{ m/s} = 500\\text{ kg}\\cdot\\text{m/s}$. $E_k = \\frac{1}{2}mv^2 = \\frac{1}{2}(50)(10^2) = 25 \\times 100 = 2500\\text{ J}$. [CSCA Jan 2026 Q19]"
+      },
+      {
+        id: 14,
+        question: "An object of mass $m = 2\\text{ kg}$ is initially at rest on a smooth horizontal surface. It is acted upon by a horizontal force $F$: $F = 4\\text{ N}$ during the 1st second ($0-1\\text{ s}$) and $F = 6\\text{ N}$ during the 2nd second ($1-2\\text{ s}$). The magnitude of the object's kinetic energy at the end of the 2nd second is ( )",
+        options: [
+          "A. $25\\text{ J}$",
+          "B. $16\\text{ J}$",
+          "C. $36\\text{ J}$",
+          "D. $50\\text{ J}$"
+        ],
+        correct: 0,
+        explanation: "By the Impulse-Momentum Theorem, the total impulse delivered is $I = \\sum F \\Delta t = (4\\text{ N} \\times 1\\text{ s}) + (6\\text{ N} \\times 1\\text{ s}) = 10\\text{ N}\\cdot\\text{s}$. Since it started from rest, its final momentum is $p = 10\\text{ kg}\\cdot\\text{m/s}$. Using $E_k = \\frac{p^2}{2m} = \\frac{10^2}{2(2)} = \\frac{100}{4} = 25\\text{ J}$. [CSCA 12.21 Q44]"
+      },
+      {
+        id: 15,
+        question: "An object of mass $m$ descends from vertical height $h$ to the ground along three different paths: (1) Free vertical drop, (2) Smooth $30^\\circ$ incline, (3) An irregular curved chute. How does the work done by gravity $W_1, W_2, W_3$ compare? ( )",
+        options: [
+          "A. $W_1 > W_2 > W_3$",
+          "B. $W_1 < W_2 < W_3$",
+          "C. $W_1 = W_2 = W_3 = mgh$",
+          "D. Cannot be determined without knowing the time taken"
+        ],
+        correct: 2,
+        explanation: "Gravity is a conservative force. The work done by gravity depends exclusively on the initial and final vertical elevations ($W_G = -\\Delta E_p = mgh$) and is completely path-independent. [CSCA Masterclass Slide 11]"
+      },
+      {
+        id: 16,
+        question: "A small ball of mass $0.2\\text{ kg}$ falls freely from a height of $2\\text{ m}$ to the ground. The change in its gravitational potential energy ($\\Delta E_p$) is ( ) ($g = 10\\text{ m/s}^2$)",
+        options: [
+          "A. $0\\text{ J}$",
+          "B. $-4\\text{ J}$",
+          "C. $+4\\text{ J}$",
+          "D. $+2\\text{ J}$"
+        ],
+        correct: 1,
+        explanation: "As the ball descends, gravitational potential energy is lost: $\\Delta E_p = E_{p,\\text{final}} - E_{p,\\text{initial}} = 0 - mgh = -(0.2)(10)(2) = -4\\text{ J}$. (Gravity does $+4\\text{ J}$ of work, so potential energy changes by $-4\\text{ J}$). [CSCA April 2026 Q35]"
+      },
+      {
+        id: 17,
+        question: "A student throws a basketball of mass $m$ from a height $h$ above the ground with an initial speed $v$. The ball rises and enters the basket at height $H$. Taking the ground as the zero-potential reference and ignoring air resistance, the total mechanical energy of the basketball entering the basket is ( )",
+        options: [
+          "A. $\\dfrac{1}{2}mv^2 + mgH$",
+          "B. $\\dfrac{1}{2}mv^2 + mg(H - h)$",
+          "C. $\\dfrac{1}{2}mv^2$",
+          "D. $\\dfrac{1}{2}mv^2 + mgh$"
+        ],
+        correct: 3,
+        explanation: "In the absence of air resistance, the total mechanical energy of the basketball is conserved throughout its flight. At launch (height $h$), $E_{\\text{mech}} = E_k + E_p = \\frac{1}{2}mv^2 + mgh$. As it enters the basket, the total mechanical energy remains equal to $\\frac{1}{2}mv^2 + mgh$. [CSCA 12.21 Q37]"
+      },
+      {
+        id: 18,
+        question: "An object of mass $m$ falls from rest through air with a constant downward acceleration of $a = \\dfrac{4}{5}g$. When it has fallen through a distance $h$, the loss in its mechanical energy is ( )",
+        options: [
+          "A. $\\dfrac{1}{5}mgh$",
+          "B. $\\dfrac{4}{5}mgh$",
+          "C. $0$",
+          "D. $mgh$"
+        ],
+        correct: 0,
+        explanation: "By Newton's 2nd Law, $mg - f_{\\text{air}} = ma = m(\\frac{4}{5}g) \\implies f_{\\text{air}} = \\frac{1}{5}mg$. The loss in mechanical energy equals the work done against air resistance: $W_{\\text{loss}} = f_{\\text{air}} \\cdot h = \\frac{1}{5}mgh$. [CSCA Jan 2026 Q38]"
+      },
+      {
+        id: 19,
+        question: "A tower crane lifts building materials of mass $m$ vertically upward for a height of $h$ with a constant upward acceleration $a$. Given the acceleration due to gravity is $g$, which of the following is correct? ( )",
+        options: [
+          "A. The work done by the tension in the steel cable is $m(a + g)h$",
+          "B. The work done by gravity on the building material is $-mah$",
+          "C. The work done by the net force on the material is $mgh$",
+          "D. The gravitational potential energy decreases by $mgh$"
+        ],
+        correct: 0,
+        explanation: "By Newton's Second Law, $T - mg = ma \\implies T = m(g + a)$. The upward work done by cable tension is $W_T = T \\cdot h = m(g + a)h$. Gravity does $-mgh$, and net work is $mah$. [CSCA April 2026 Q45]"
+      },
+      {
+        id: 20,
+        question: "A small ball falls freely from rest in air and strikes the top of an upright lightweight vertical spring, compressing it until the ball's velocity momentarily reaches zero. Which statement about the ball's motion after contact is correct? ( )",
+        options: [
+          "A. The ball immediately decelerates with increasing deceleration until it stops",
+          "B. The position with zero velocity is where the spring is compressed the most",
+          "C. The ball first accelerates and then decelerates, reaching maximum velocity when spring force equals gravity",
+          "D. Both B and C are correct"
+        ],
+        correct: 3,
+        explanation: "Immediately after contact, $mg > kx$, so net force is downward and the ball continues to speed up. Maximum velocity occurs when $kx = mg$ ($F_{\\text{net}} = 0$). Beyond this, $kx > mg$, causing upward net force and deceleration until $v = 0$ at maximum compression. Hence both B and C are correct statements. [CSCA April 2026 Q44]"
+      },
+      {
+        id: 21,
+        question: "A bullet traveling horizontally at $700\\text{ m/s}$ penetrates a fixed wooden board, reducing its speed to $500\\text{ m/s}$. If it continues into an identical second fixed wooden board with the same average resistance, the bullet's emerging speed is ( )",
+        options: [
+          "A. $200\\text{ m/s}$",
+          "B. $100\\text{ m/s}$",
+          "C. $50\\text{ m/s}$",
+          "D. $300\\text{ m/s}$"
+        ],
+        correct: 1,
+        explanation: "Work done by resistance in 1st board: $W_f = \\frac{1}{2}m(500^2 - 700^2) = \\frac{1}{2}m(250{,}000 - 490{,}000) = -\\frac{1}{2}m(240{,}000)$. Passing through the 2nd identical board does identical work: $\\frac{1}{2}m(v_{\\text{final}}^2 - 500^2) = -\\frac{1}{2}m(240{,}000) \\implies v_{\\text{final}}^2 = 250{,}000 - 240{,}000 = 10{,}000 \\implies v_{\\text{final}} = \\sqrt{10{,}000} = 100\\text{ m/s}$. [CSCA 12.21 Q43]"
+      },
+      {
+        id: 22,
+        question: "An object with mass $m$ falls freely from rest under gravity. Ignoring air resistance, the instantaneous power delivered by gravity to the object at time $t$ is ( )",
+        options: [
+          "A. $\\dfrac{1}{2}mg^2 t$",
+          "B. $mgt$",
+          "C. $mg^2 t$",
+          "D. $\\dfrac{1}{4}mg^2 t$"
+        ],
+        correct: 2,
+        explanation: "Instantaneous velocity at time $t$ is $v = gt$. Instantaneous power delivered by gravity is $P = F \\cdot v = (mg) \\cdot (gt) = mg^2 t$. (Note: Average power over time $t$ would be $\\frac{W}{t} = \\frac{mg(\\frac{1}{2}gt^2)}{t} = \\frac{1}{2}mg^2 t$). [CSCA 12.21 Q41]"
+      },
+      {
+        id: 23,
+        question: "A car has an engine with rated power $P = 60\\text{ kW}$ ($60{,}000\\text{ W}$) and travels on a horizontal highway where resistance force is constant at $f = 3000\\text{ N}$. What is the maximum constant terminal speed $v_{\\max}$ the car can achieve? ( )",
+        options: [
+          "A. $15\\text{ m/s}$",
+          "B. $20\\text{ m/s}$",
+          "C. $30\\text{ m/s}$",
+          "D. $40\\text{ m/s}$"
+        ],
+        correct: 1,
+        explanation: "At maximum constant terminal speed, acceleration is zero ($a = 0$), meaning engine driving traction equals total resistance: $F = f$. Using $P = F \\cdot v_{\\max} = f \\cdot v_{\\max} \\implies v_{\\max} = \\frac{P}{f} = \\frac{60{,}000\\text{ W}}{3000\\text{ N}} = 20\\text{ m/s}$. [CSCA Masterclass Slide 17]"
+      },
+      {
+        id: 24,
+        question: "The same car (mass $m = 1500\\text{ kg}$, rated power $P = 60\\text{ kW}$, resistance $f = 3000\\text{ N}$) accelerates from rest. When it reaches an instantaneous speed of $v = 10\\text{ m/s}$, what is its instantaneous acceleration? ( )",
+        options: [
+          "A. $1.0\\text{ m/s}^2$",
+          "B. $3.0\\text{ m/s}^2$",
+          "C. $2.0\\text{ m/s}^2$",
+          "D. $0\\text{ m/s}^2$"
+        ],
+        correct: 2,
+        explanation: "At $v = 10\\text{ m/s}$, the engine traction force is $F = \\frac{P}{v} = \\frac{60{,}000\\text{ W}}{10\\text{ m/s}} = 6000\\text{ N}$. By Newton's Second Law: $F - f = ma \\implies 6000\\text{ N} - 3000\\text{ N} = 1500 a \\implies 3000 = 1500 a \\implies a = 2.0\\text{ m/s}^2$. [CSCA Masterclass Slide 17]"
+      },
+      {
+        id: 25,
+        question: "A car with a mass of $2\\text{ tons}$ ($2000\\text{ kg}$) and an engine with a power of $30\\text{ kW}$ travels at a constant velocity of $72\\text{ km/h}$ on level ground. The resistance experienced by the car while driving is ( )",
+        options: [
+          "A. $5 \\times 10^3\\text{ N}$",
+          "B. $6 \\times 10^3\\text{ N}$",
+          "C. $1.5 \\times 10^3\\text{ N}$",
+          "D. $2 \\times 10^3\\text{ N}$"
+        ],
+        correct: 2,
+        explanation: "Convert speed to SI units: $v = 72\\text{ km/h} = \\frac{72}{3.6} = 20\\text{ m/s}$. At constant velocity, engine force equals road resistance ($F = f$). Using $P = Fv = fv \\implies f = \\frac{P}{v} = \\frac{30{,}000\\text{ W}}{20\\text{ m/s}} = 1500\\text{ N} = 1.5 \\times 10^3\\text{ N}$. [CSCA 12.21 Q38]"
+      }
+    ];
+
+    /* ==========================================================================
+       2. STATE MANAGEMENT & CLOUDFLARE ENDPOINT
+       ========================================================================== */
+    const RESULTS_API_URL = 'https://csca-results.csca-test.workers.dev/submit';
+    const PENDING_KEY = 'csca_pending_result_work_energy_power';
+    const EXAM_DURATION_SECONDS = 45 * 60; // 45 minutes
+
+    let studentInfo = { name: '', id: '' };
+    let entryTimestamp = null;
+    let exitTimestamp = null;
+    let submissionId = null;
+    let currentQIndex = 0;
+    let userAnswers = new Array(questions.length).fill(null);
+    let markedQuestions = new Array(questions.length).fill(false);
+    let timeRemaining = EXAM_DURATION_SECONDS;
+    let timerInterval = null;
+
+    /* ==========================================================================
+       3. INTERACTIVE CANVAS ANIMATION (ENTRY SCREEN - GREEN ACCENT)
+       ========================================================================== */
+    (function initInteractiveCanvas() {
+      const canvas = document.getElementById('entry-bg-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let width, height;
+      let mouse = { x: null, y: null, radius: 150 };
+
+      function resize() {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+      }
+      window.addEventListener('resize', resize);
+      resize();
+
+      window.addEventListener('mousemove', (e) => {
+        mouse.x = e.clientX;
+        mouse.y = e.clientY;
+      });
+
+      window.addEventListener('mouseleave', () => {
+        mouse.x = null;
+        mouse.y = null;
+      });
+
+      const particles = [];
+      const count = Math.min(Math.floor(window.innerWidth / 22), 48);
+
+      class GeometricNode {
+        constructor() {
+          this.x = Math.random() * width;
+          this.y = Math.random() * height;
+          this.vx = (Math.random() - 0.5) * 0.75;
+          this.vy = (Math.random() - 0.5) * 0.75;
+          this.radius = Math.random() * 16 + 6;
+          this.baseRadius = this.radius;
+          this.color = ['#10B981', '#34D399', '#059669', '#F97316', '#38BDF8'][Math.floor(Math.random() * 5)];
+          this.pulse = Math.random() * Math.PI * 2;
+        }
+
+        update() {
+          this.x += this.vx;
+          this.y += this.vy;
+          this.pulse += 0.02;
+
+          if (this.x < -20) this.x = width + 20;
+          if (this.x > width + 20) this.x = -20;
+          if (this.y < -20) this.y = height + 20;
+          if (this.y > height + 20) this.y = -20;
+
+          if (mouse.x !== null && mouse.y !== null) {
+            const dx = mouse.x - this.x;
+            const dy = mouse.y - this.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < mouse.radius) {
+              if (this.radius < this.baseRadius * 2.1) this.radius += 1;
+            } else if (this.radius > this.baseRadius) {
+              this.radius -= 0.5;
+            }
+          } else if (this.radius > this.baseRadius) {
+            this.radius -= 0.5;
+          }
+        }
+
+        draw() {
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+          ctx.strokeStyle = this.color;
+          ctx.globalAlpha = 0.45;
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
+
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
+          ctx.fillStyle = this.color;
+          ctx.globalAlpha = 0.75;
+          ctx.fill();
+
+          const innerR = Math.sin(this.pulse) * (this.radius * 0.4) + (this.radius * 0.5);
+          if (innerR > 0) {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, Math.max(1, innerR), 0, Math.PI * 2);
+            ctx.strokeStyle = this.color;
+            ctx.globalAlpha = 0.25;
+            ctx.stroke();
+          }
+
+          ctx.restore();
+        }
+      }
+
+      for (let i = 0; i < count; i++) {
+        particles.push(new GeometricNode());
+      }
+
+      const ripples = [];
+      window.addEventListener('click', (e) => {
+        if (document.getElementById('screen-entry').classList.contains('is-active')) {
+          ripples.push({ x: e.clientX, y: e.clientY, radius: 5, maxRadius: 180, alpha: 0.8 });
+        }
+      });
+
+      function animate() {
+        ctx.clearRect(0, 0, width, height);
+
+        for (let i = 0; i < particles.length; i++) {
+          particles[i].update();
+          particles[i].draw();
+
+          for (let j = i + 1; j < particles.length; j++) {
+            const dx = particles[i].x - particles[j].x;
+            const dy = particles[i].y - particles[j].y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+
+            if (dist < 140) {
+              ctx.save();
+              ctx.beginPath();
+              ctx.moveTo(particles[i].x, particles[i].y);
+              ctx.lineTo(particles[j].x, particles[j].y);
+              ctx.strokeStyle = '#34D399';
+              ctx.globalAlpha = (1 - dist / 140) * 0.22;
+              ctx.lineWidth = 1;
+              ctx.stroke();
+              ctx.restore();
+            }
+          }
+        }
+
+        for (let r = ripples.length - 1; r >= 0; r--) {
+          const rip = ripples[r];
+          rip.radius += 4;
+          rip.alpha -= 0.018;
+
+          if (rip.alpha <= 0 || rip.radius >= rip.maxRadius) {
+            ripples.splice(r, 1);
+          } else {
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(rip.x, rip.y, rip.radius, 0, Math.PI * 2);
+            ctx.strokeStyle = 'rgba(16, 185, 129, ' + rip.alpha + ')';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            ctx.restore();
+          }
+        }
+
+        requestAnimationFrame(animate);
+      }
+
+      animate();
+    })();
+
+    /* ==========================================================================
+       4. SCREEN NAVIGATION & LOGIC
+       ========================================================================== */
+    function showScreen(screenId) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('is-active'));
+      document.getElementById(screenId).classList.add('is-active');
+    }
+
+    function handleStartExam(e) {
+      e.preventDefault();
+      const nameInput = document.getElementById('student-name-input').value.trim();
+      const idInput = document.getElementById('student-id-input').value.trim();
+
+      if (!nameInput) return;
+
+      studentInfo.name = nameInput;
+      studentInfo.id = idInput || 'CSCA-PHYS-2026';
+      entryTimestamp = new Date();
+      submissionId = (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(16).slice(2);
+
+      // Sidebar Info
+      document.getElementById('display-student-name').textContent = studentInfo.name;
+      document.getElementById('display-student-id').textContent = 'ID: ' + studentInfo.id;
+      
+      const initials = studentInfo.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+      document.getElementById('student-avatar').textContent = initials || 'FL';
+
+      buildQuestionGrid();
+      loadQuestion(0);
+      startTimer();
+
+      showScreen('screen-exam');
+      if (window.MathJax) MathJax.typesetPromise();
+    }
+
+    function buildQuestionGrid() {
+      const grid = document.getElementById('q-grid');
+      grid.innerHTML = '';
+
+      for (let i = 0; i < questions.length; i++) {
+        const cell = document.createElement('div');
+        cell.className = 'q-cell';
+        cell.textContent = i + 1;
+        cell.id = `q-cell-${i}`;
+        cell.onclick = () => loadQuestion(i);
+        grid.appendChild(cell);
+      }
+      updateGridState();
+    }
+
+    function updateGridState() {
+      let answeredCount = 0;
+
+      for (let i = 0; i < questions.length; i++) {
+        const cell = document.getElementById(`q-cell-${i}`);
+        if (!cell) continue;
+
+        cell.className = 'q-cell';
+        if (i === currentQIndex) cell.classList.add('current');
+        if (userAnswers[i] !== null) {
+          cell.classList.add('answered');
+          answeredCount++;
+        }
+        if (markedQuestions[i]) {
+          cell.classList.add('marked');
+        }
+      }
+
+      document.getElementById('progress-count').textContent = `${answeredCount} / ${questions.length} Answered`;
+    }
+
+    function loadQuestion(index) {
+      currentQIndex = index;
+      const q = questions[index];
+
+      document.getElementById('question-counter').textContent = `Question ${index + 1} of ${questions.length}`;
+      document.getElementById('question-text').innerHTML = q.question;
+
+      const markBtn = document.getElementById('btn-mark');
+      markBtn.style.color = markedQuestions[index] ? 'var(--brand-orange)' : 'var(--ink-soft)';
+      markBtn.textContent = markedQuestions[index] ? '🔖 Marked' : '🔖 Mark for Review';
+
+      const list = document.getElementById('options-list');
+      list.innerHTML = '';
+
+      q.options.forEach((optText, optIdx) => {
+        const item = document.createElement('div');
+        item.className = 'option-item' + (userAnswers[index] === optIdx ? ' selected' : '');
+        item.onclick = () => selectOption(optIdx);
+
+        item.innerHTML = `
+          <div class="option-radio"></div>
+          <div>${optText}</div>
+        `;
+        list.appendChild(item);
+      });
+
+      document.getElementById('btn-prev').disabled = (index === 0);
+      document.getElementById('btn-next').disabled = (index === questions.length - 1);
+
+      updateGridState();
+
+      if (window.MathJax) {
+        MathJax.typesetPromise([document.getElementById('question-text'), document.getElementById('options-list')]);
+      }
+    }
+
+    function selectOption(optIdx) {
+      userAnswers[currentQIndex] = optIdx;
+      loadQuestion(currentQIndex);
+    }
+
+    function toggleMarkQuestion() {
+      markedQuestions[currentQIndex] = !markedQuestions[currentQIndex];
+      loadQuestion(currentQIndex);
+    }
+
+    function navigateQuestion(dir) {
+      const newIndex = currentQIndex + dir;
+      if (newIndex >= 0 && newIndex < questions.length) {
+        loadQuestion(newIndex);
+      }
+    }
+
+    /* ==========================================================================
+       5. TIMER & SUBMISSION
+       ========================================================================== */
+    function startTimer() {
+      timeRemaining = EXAM_DURATION_SECONDS;
+      const display = document.getElementById('timer-display');
+      const track = document.getElementById('timer-track');
+      const fill = document.getElementById('timer-fill');
+
+      clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        timeRemaining--;
+
+        const mins = Math.floor(timeRemaining / 60);
+        const secs = timeRemaining % 60;
+        display.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+
+        const pct = (timeRemaining / EXAM_DURATION_SECONDS) * 100;
+        fill.style.width = `${pct}%`;
+
+        if (timeRemaining <= 300) {
+          display.classList.add('critical');
+          track.classList.add('critical');
+        }
+
+        if (timeRemaining <= 0) {
+          clearInterval(timerInterval);
+          alert("Time has expired! Submitting your exam automatically.");
+          submitExam();
+        }
+      }, 1000);
+    }
+
+    function confirmSubmitExam() {
+      const unanswered = userAnswers.filter(a => a === null).length;
+      let msg = "Are you sure you want to finish and submit your exam?";
+      if (unanswered > 0) {
+        msg = `You have ${unanswered} unanswered question(s). Are you sure you want to finish and submit?`;
+      }
+      if (confirm(msg)) {
+        submitExam();
+      }
+    }
+
+    function submitExam() {
+      clearInterval(timerInterval);
+      exitTimestamp = new Date();
+
+      let correctCount = 0;
+      const wrongQuestions = [];
+      userAnswers.forEach((ans, idx) => {
+        if (ans === questions[idx].correct) {
+          correctCount++;
+        } else {
+          wrongQuestions.push(idx + 1);
+        }
+      });
+
+      const totalPct = Math.round((correctCount / questions.length) * 100);
+      const isPassed = totalPct >= 60;
+
+      // Update Outro UI
+      document.getElementById('outro-student-name').textContent = studentInfo.name;
+      document.getElementById('stat-score').textContent = `${correctCount} / ${questions.length}`;
+      document.getElementById('stat-pct').textContent = `${totalPct}%`;
+      document.getElementById('stat-correct').textContent = correctCount;
+
+      const spentSecs = EXAM_DURATION_SECONDS - timeRemaining;
+      const spentMins = Math.floor(spentSecs / 60);
+      const spentSecRem = spentSecs % 60;
+      document.getElementById('stat-time').textContent = `${spentMins}m ${spentSecRem}s`;
+
+      const badge = document.getElementById('score-badge');
+      if (isPassed) {
+        badge.className = 'score-badge passed';
+        badge.textContent = 'PASSED';
+      } else {
+        badge.className = 'score-badge failed';
+        badge.textContent = 'NEEDS IMPROVEMENT';
+      }
+
+      buildReviewList();
+
+      showScreen('screen-outro');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (window.MathJax) MathJax.typesetPromise([document.getElementById('review-list')]);
+
+      // Submit data payload to Cloudflare D1
+      submitResult({
+        id: submissionId,
+        username: `${studentInfo.name} [Work, Energy & Power]`,
+        candidateId: studentInfo.id,
+        test: "Work, Energy & Power",
+        unit: "Work, Energy & Power",
+        topic: "Physics — Work, Energy & Power",
+        score: correctCount,
+        total: questions.length,
+        percent: totalPct,
+        wrongQuestions: wrongQuestions,
+        startedAt: entryTimestamp ? entryTimestamp.toISOString() : null,
+        submittedAt: exitTimestamp.toISOString()
+      });
+    }
+
+    /* ==========================================================================
+       6. CLOUDFLARE WORKER / D1 SYNC
+       ========================================================================== */
+    async function postResult(data) {
+      const res = await fetch(RESULTS_API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      if (!res.ok) throw new Error('Server responded ' + res.status);
+    }
+
+    async function submitResult(data) {
+      const statusEl = document.getElementById('export-status');
+      if (statusEl) statusEl.textContent = 'Saving your results…';
+
+      try { localStorage.setItem(PENDING_KEY, JSON.stringify(data)); } catch (e) {}
+
+      const delays = [0, 1500, 4000];
+      for (const d of delays) {
+        if (d) await new Promise(r => setTimeout(r, d));
+        try {
+          await postResult(data);
+          try { localStorage.removeItem(PENDING_KEY); } catch (e) {}
+          if (statusEl) statusEl.textContent = '✅ Results saved (Work, Energy & Power).';
+          return;
+        } catch (err) {
+          console.error('Result upload failed:', err);
+        }
+      }
+      if (statusEl) statusEl.textContent = '⚠️ Could not save results. Keep this page open; retrying automatically...';
+      const t = setInterval(async () => {
+        try {
+          await postResult(data);
+          clearInterval(t);
+          try { localStorage.removeItem(PENDING_KEY); } catch (e) {}
+          if (statusEl) statusEl.textContent = '✅ Results saved (Work, Energy & Power).';
+        } catch (e) {}
+      }, 15000);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      try {
+        const raw = localStorage.getItem(PENDING_KEY);
+        if (raw) postResult(JSON.parse(raw)).then(() => localStorage.removeItem(PENDING_KEY)).catch(() => {});
+      } catch (e) {}
+    });
+
+    function buildReviewList() {
+      const list = document.getElementById('review-list');
+      list.innerHTML = '';
+
+      questions.forEach((q, idx) => {
+        const uAns = userAnswers[idx];
+        const isCorr = uAns === q.correct;
+        const isSkip = uAns === null;
+
+        const item = document.createElement('div');
+        item.className = 'review-item ' + (isSkip ? 'is-skipped' : (isCorr ? 'is-correct' : 'is-incorrect'));
+
+        const userText = isSkip ? '<em>Skipped / Not Answered</em>' : q.options[uAns];
+        const correctText = q.options[q.correct];
+
+        item.innerHTML = `
+          <div class="review-q-num">Question ${idx + 1}</div>
+          <div class="review-q-text">${q.question}</div>
+          <div class="review-ans user-ans">Your Answer: <span>${userText}</span></div>
+          ${!isCorr ? `<div class="review-ans correct-ans">Correct Answer: <span>${correctText}</span></div>` : ''}
+          <div class="review-exp"><strong>Explanation:</strong> ${q.explanation}</div>
+        `;
+
+        list.appendChild(item);
+      });
+    }
+
+    function restartExam() {
+      userAnswers.fill(null);
+      markedQuestions.fill(false);
+      currentQIndex = 0;
+      entryTimestamp = null;
+      exitTimestamp = null;
+      submissionId = null;
+      const statusEl = document.getElementById('export-status');
+      if (statusEl) statusEl.textContent = '';
+      showScreen('screen-entry');
+    }
+  </script>
+</body>
+</html>
